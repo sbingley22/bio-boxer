@@ -9,7 +9,7 @@ const gamepadState = {
 export const useGameStore = create((set, get) => ({
   getGamepad: () => gamepadState,
 
-  mode: 5,
+  mode: 0,
   setMode: (mode) => set({ mode }),
 
   options: {
