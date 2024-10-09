@@ -9,3 +9,6 @@ Wake up from your coma by out boxing your immune system and pathogens. Make use 
 
 ToDo:
 
+
+
+git subtree push --prefix dist origin gh-pages
