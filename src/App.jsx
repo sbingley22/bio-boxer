@@ -1,12 +1,16 @@
 import { useState } from 'react'
+import { useGameStore } from './useGameStore.js'
+import MainMenu from './components/MainMenu.jsx'
+import Game from './components/Game.jsx'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { mode } = useGameStore()
 
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world! AAAA
-    </h1> 
+    <>
+      {mode === 0 && <Game />}
+      {mode === 5 && <MainMenu />}
+    </> 
   )
 }
 
