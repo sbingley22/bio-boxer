@@ -1,6 +1,6 @@
 # bio-boxer
 
-Live Link: https://sbingley22.github.io/bio-survivor/
+Live Link: https://sbingley22.github.io/bio-boxer/
 
 
 Description:
