@@ -1,11 +1,10 @@
-import { useState } from 'react'
 import GameScene from './GameScene.jsx'
 
 function Game() {
 
   return (
     <div className="flex w-full h-screen justify-center items-center bg-black">
-      <div className="w-[600px] h-full bg-green-700">
+      <div className="w-[400px] h-full bg-black border-4 border-purple-800 text-purple-400">
         sidebar
       </div>
       <div className="w-[1024px] h-full bg-black">

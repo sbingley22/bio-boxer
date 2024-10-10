@@ -23,11 +23,21 @@ export const useGameStore = create((set, get) => ({
   getVolume: () => get().options.volume,
   getMute: () => get().options.mute,
 
+  arenaSize: 6,
+  setArenaSize: (arenaSize) => set({ arenaSize }),
+  getArenaSize: () => get().arenaSize,
+
   player: null,
   setPlayer: (player) => set({ player }),
   setPlayerFlag: (flag, value) => {
     const state = get()
     if (state.player.current) state.player.current[flag] = value
+  },
+  enemy: null,
+  setEnemy: (enemy) => set({ enemy }),
+  setEnemyFlag: (flag, value) => {
+    const state = get()
+    if (state.enemy.current) state.enemy.current[flag] = value
   },
 
   score: 0,
@@ -54,6 +64,7 @@ export const useGameStore = create((set, get) => ({
     set({
       score: 0,
       player: null,
+      enemy: null,
       hudInfo: {
         health: 100,
         armour: 0,

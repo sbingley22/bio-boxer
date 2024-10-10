@@ -7,7 +7,7 @@ const GameScene = () => {
   return (
     <Canvas
       camera={{
-        position: [0,5,5],
+        position: [0,8,8],
         fov: 60,
       }}
       shadows

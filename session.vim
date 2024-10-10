@@ -13,49 +13,17 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +13 E:/Web_Projects/Games/bio-boxer/README.md
-badd +11 E:/Web_Projects/Games/bio-boxer/src/components/Game.jsx
-badd +12 E:/Web_Projects/Games/bio-boxer/src/components/GameScene.jsx
-badd +10 E:/Web_Projects/Games/bio-boxer/src/components/Arena.jsx
-badd +22 E:/Web_Projects/Games/bio-boxer/src/components/Player.jsx
-badd +30 E:/Web_Projects/Games/bio-boxer/src/components/characters/PlayerModel.jsx
+badd +11 src/components/Game.jsx
+badd +12 src/components/GameScene.jsx
+badd +15 src/components/Arena.jsx
+badd +15 src/components/characters/Enemy.jsx
+badd +31 src/components/characters/Player.jsx
 argglobal
 %argdel
-$argadd .
-edit E:/Web_Projects/Games/bio-boxer/src/components/Player.jsx
-let s:save_splitbelow = &splitbelow
-let s:save_splitright = &splitright
-set splitbelow splitright
-wincmd _ | wincmd |
-vsplit
-1wincmd h
-wincmd w
-let &splitbelow = s:save_splitbelow
-let &splitright = s:save_splitright
-wincmd t
-let s:save_winminheight = &winminheight
-let s:save_winminwidth = &winminwidth
-set winminheight=0
-set winheight=1
-set winminwidth=0
-set winwidth=1
-exe 'vert 1resize ' . ((&columns * 30 + 104) / 209)
-exe 'vert 2resize ' . ((&columns * 178 + 104) / 209)
+$argadd ./
+edit src/components/characters/Player.jsx
 argglobal
-enew
-file NvimTree_1
-balt E:/Web_Projects/Games/bio-boxer/src/components/Player.jsx
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal nofen
-wincmd w
-argglobal
-balt E:/Web_Projects/Games/bio-boxer/src/components/characters/PlayerModel.jsx
+balt src/components/characters/Enemy.jsx
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -66,15 +34,13 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 22 - ((21 * winheight(0) + 24) / 48)
+let s:l = 17 - ((16 * winheight(0) + 24) / 48)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 22
-normal! 019|
-wincmd w
-exe 'vert 1resize ' . ((&columns * 30 + 104) / 209)
-exe 'vert 2resize ' . ((&columns * 178 + 104) / 209)
+keepjumps 17
+normal! 0
+lcd E:/Web_Projects/Games/bio-boxer
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf
@@ -82,8 +48,6 @@ endif
 unlet! s:wipebuf
 set winheight=1 winwidth=20
 let &shortmess = s:shortmess_save
-let &winminheight = s:save_winminheight
-let &winminwidth = s:save_winminwidth
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if filereadable(s:sx)
   exe "source " . fnameescape(s:sx)
