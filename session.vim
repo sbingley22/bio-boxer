@@ -13,17 +13,15 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +11 src/components/Game.jsx
-badd +12 src/components/GameScene.jsx
-badd +15 src/components/Arena.jsx
-badd +15 src/components/characters/Enemy.jsx
-badd +31 src/components/characters/Player.jsx
+badd +38 src/components/characters/Player.jsx
+badd +26 src/useGameStore.js
+badd +127 src/gameHelper.js
 argglobal
 %argdel
-$argadd ./
+$argadd E:/Web_Projects/Games/bio-boxer
 edit src/components/characters/Player.jsx
 argglobal
-balt src/components/characters/Enemy.jsx
+balt src/gameHelper.js
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -34,12 +32,12 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 17 - ((16 * winheight(0) + 24) / 48)
+let s:l = 5 - ((4 * winheight(0) + 24) / 48)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 17
-normal! 0
+keepjumps 5
+normal! 037|
 lcd E:/Web_Projects/Games/bio-boxer
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'

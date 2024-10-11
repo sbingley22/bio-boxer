@@ -10,7 +10,7 @@ export const isUnskippableAnimation = (anim) => {
 
   const a = anim.current
   if (a === "cqc dmg") return true
-  if (a === "cqc block") return true
+  if (a === "cqc block dmg") return true
   if (a === "cqc jab") return true
   if (a === "cqc straight") return true
   if (a === "cqc roundhouse") return true
@@ -45,6 +45,13 @@ export const rotateToVec = (group, dx, dy, rotSpeed=0.1) => {
 // ---------------------------------------------------------------------
 // Player Functions
 
+export const updateHeldInputs = (heldInputs, inputs) => {
+  Object.keys(heldInputs.current).forEach((inputName) => {
+    if (inputs.keyboard[inputName] || inputs.gamepad[inputName]) heldInputs.current.interact = true
+    else heldInputs.current.interact = false
+  })
+}
+
 export const playerMovement = (group, enemy, arenaSize, inputs, anim, transition, options, baseSpeed, speedMultiplier, delta ) => {
   if (!group.current) return
   transition.current = "cqc stance"
@@ -77,7 +84,7 @@ export const playerMovement = (group, enemy, arenaSize, inputs, anim, transition
 
   // enemy position
   let enemyRange = 999
-  const combatRange = 2
+  const combatRange = 2.5
   let rx = dx
   let ry = dy
   if (enemy && enemy.current) {
@@ -93,7 +100,7 @@ export const playerMovement = (group, enemy, arenaSize, inputs, anim, transition
     // moving
     rotateToVec(group.current, rx, ry)
 
-    transition.current = "cqc move"
+    transition.current = "cqc walk"
     if (!isUnskippableAnimation(anim)) {
       anim.current = "cqc walk"
     }
@@ -106,9 +113,16 @@ export const playerMovement = (group, enemy, arenaSize, inputs, anim, transition
   }
   else {
     // stationary
-    if (enemyRange < combatRange) rotateToVec(group.current, rx, ry)
-
-    if (!isUnskippableAnimation(anim)) {
+    if (enemyRange < combatRange) {
+      // in combat range
+      rotateToVec(group.current, rx, ry)
+      transition.current = "cqc block"
+      if (!isUnskippableAnimation(anim)) {
+        anim.current = "cqc block"
+      }
+    }
+    else if (!isUnskippableAnimation(anim)) {
+      // out of combat range
       anim.current = "cqc stance"
     }
   }
@@ -129,5 +143,113 @@ export const updateCamera = (group, enemy, arenaSize, camera) => {
   camera.position.x = midpoint.x
   camera.position.y = midpoint.y + camYOffset + zoom
   camera.position.z = midpoint.z + camZOffset + zoom
+}
+
+export const playerAttack = (group, enemy, anim, inputs, hitTimer) => {
+  if (!group) return
+  if (!enemy) return
+  if (!group.current) return
+  if (!enemy.current) return
+  if (!inputs.keyboard) return
+  if (!hitTimer.current) return
+
+  if (!inputs.keyboard.interact && !inputs.gamepad.interact) return
+  if (inputs.heldInputs.interact) return
+
+  if (!isUnskippableAnimation(anim)) {
+    // start combo
+    anim.current = "cqc jab"
+    hitTimer.current = 0
+    setTimeout(() => {
+      enemy.current.flagDmg = {
+        range: 1.5,
+        damage: 2,
+      }
+    }, 150);
+  }
+  else if (anim.current === "cqc jab") {
+    if (hitTimer.current > 0.12) {
+      anim.current = "cqc straight"
+      hitTimer.current = 0
+      setTimeout(() => {
+        enemy.current.flagDmg = {
+          range: 2,
+          damage: 4,
+        }
+      }, 250)
+    }
+  }
+  else if (anim.current === "cqc straight") {
+    if (hitTimer.current > 0.25) {
+      anim.current = "cqc roundhouse"
+      hitTimer.current = 0
+      setTimeout(() => {
+        enemy.current.flagDmg = {
+          range: 2.4,
+          damage: 10,
+        }
+      }, 500)
+    }
+  }
+}
+
+export const playerFlags = (group, opponent, anim, forceAnim) => {
+  if (!group) return
+  if (!opponent) return
+  if (!group.current) return
+  if (!opponent.current) return
+
+  // Damage Flag
+  if (group.current.flagDmg) {
+    const flag = group.current.flagDmg
+    const distance = group.current.position.distanceTo(opponent.current.position)
+    //console.log(flag.range, distance)
+
+    if (flag.range > distance) {
+      let dmg = flag.damage
+      if (["cqc block", "cqc block dmg"].includes(anim.current)) {
+        // blocking
+        group.current.health -= dmg * 0.1
+        if (anim.current === "cqc block dmg") forceAnim.current = true
+        anim.current = "cqc block dmg"
+      }
+      else {
+        // clean hit
+        group.current.health -= dmg
+        if (anim.current === "cqc dmg") forceAnim.current = true
+        anim.current = "cqc dmg"
+      }
+    }
+
+    group.current.flagDmg = null
+  }
+
+}
+
+//--------------------------------------------------------
+// Enemy Functions
+
+export const enemyFlags = (group, opponent, anim, forceAnim) => {
+  if (!group) return
+  if (!opponent) return
+  if (!group.current) return
+  if (!opponent.current) return
+
+  // Damage Flag
+  if (group.current.flagDmg) {
+    const flag = group.current.flagDmg
+    const distance = group.current.position.distanceTo(opponent.current.position)
+    //console.log(flag.range, distance)
+
+    if (flag.range > distance) {
+      group.current.health -= flag.damage
+
+      if (anim.current === "cqc dmg") forceAnim.current = true
+      anim.current = "cqc dmg"
+    }
+
+    group.current.flagDmg = null
+  }
+
 }
 

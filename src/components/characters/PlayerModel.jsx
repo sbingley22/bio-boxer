@@ -4,7 +4,7 @@ import { useSkinnedMeshClone } from "./SkinnedMeshClone.js"
 import { useAnimations } from "@react-three/drei"
 import { useFrame } from "@react-three/fiber"
 
-const PlayerModel = ({ anim, transition="cqc stance", speedMultiplier={current:1} }) => {
+const PlayerModel = ({ anim, transition="cqc stance", speedMultiplier={current:1}, forceAnim={current:false} }) => {
   const { scene, nodes, animations } = useSkinnedMeshClone(glb)
   const { mixer, actions } = useAnimations(animations, scene)
   const lastAnim = useRef(anim.current)
@@ -31,7 +31,7 @@ const PlayerModel = ({ anim, transition="cqc stance", speedMultiplier={current:1
   useEffect(()=>{
     if (!mixer) return
 
-    const oneShotAnims = ["cqc jab", "cqc straight", "cqc roundhouse", "cqc dmg", "cqc block", "cqc block dmg"]
+    const oneShotAnims = ["cqc jab", "cqc straight", "cqc roundhouse", "cqc dmg", "cqc block dmg"]
     oneShotAnims.forEach(osa => {
       if (!actions[osa]) {
         console.log("No such action: ", osa)
@@ -68,7 +68,10 @@ const PlayerModel = ({ anim, transition="cqc stance", speedMultiplier={current:1
 
   // Update Animations
   const updateAnimations = () => {
-    if (anim.current === lastAnim.current) return
+    if (forceAnim.current) {
+      forceAnim.current = false
+    }
+    else if (anim.current === lastAnim.current) return
     if (!actions[anim.current]) console.log("Couldnt find animation", anim.current, lastAnim.current)
 
     const fadeTime = 0.1
