@@ -12,6 +12,11 @@ export const useGameStore = create((set, get) => ({
   mode: 0,
   setMode: (mode) => set({ mode }),
 
+  gameMode: "round",
+  setGameMode: (gameMode) => set({ gameMode }),
+  round: 1,
+  setRound: (round) => set({ round }),
+
   options: {
     volume: 0.5,
     mute: false,
@@ -50,10 +55,9 @@ export const useGameStore = create((set, get) => ({
   getScore: () => get().score,
   
   hudInfo: {
-    health: 100,
-    armour: 0,
+    playerHealth: 100,
+    enemyHealth: 100,
     msg: "",
-    status: null,
   },
   setHudInfo: (hudInfo) => set({ hudInfo }),
   setHudInfoParameter: (newParameter) => set((state) => ({

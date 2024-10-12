@@ -199,6 +199,8 @@ export const playerFlags = (group, opponent, anim, forceAnim) => {
   if (!group.current) return
   if (!opponent.current) return
 
+  let updateStatus = []
+
   // Damage Flag
   if (group.current.flagDmg) {
     const flag = group.current.flagDmg
@@ -206,6 +208,7 @@ export const playerFlags = (group, opponent, anim, forceAnim) => {
     //console.log(flag.range, distance)
 
     if (flag.range > distance) {
+      updateStatus.push("health")
       let dmg = flag.damage
       if (["cqc block", "cqc block dmg"].includes(anim.current)) {
         // blocking
@@ -224,6 +227,7 @@ export const playerFlags = (group, opponent, anim, forceAnim) => {
     group.current.flagDmg = null
   }
 
+  return updateStatus
 }
 
 //--------------------------------------------------------
@@ -235,6 +239,8 @@ export const enemyFlags = (group, opponent, anim, forceAnim) => {
   if (!group.current) return
   if (!opponent.current) return
 
+  let updateStatus = []
+
   // Damage Flag
   if (group.current.flagDmg) {
     const flag = group.current.flagDmg
@@ -242,6 +248,7 @@ export const enemyFlags = (group, opponent, anim, forceAnim) => {
     //console.log(flag.range, distance)
 
     if (flag.range > distance) {
+      updateStatus.push("health")
       group.current.health -= flag.damage
 
       if (anim.current === "cqc dmg") forceAnim.current = true
@@ -251,5 +258,6 @@ export const enemyFlags = (group, opponent, anim, forceAnim) => {
     group.current.flagDmg = null
   }
 
+  return updateStatus
 }
 

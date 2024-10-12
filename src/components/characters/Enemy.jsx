@@ -18,7 +18,12 @@ const Enemy = () => {
     if (!enemy) setEnemy(group)
     if (group.current.health <= 0) return
      
-    enemyFlags(group, player, anim, forceAnim)
+    const flagStatus = enemyFlags(group, player, anim, forceAnim)
+    if (flagStatus && flagStatus.length > 0) {
+      flagStatus.forEach(status => {
+        if (status === "health") setHudInfoParameter({enemyHealth: group.current.health})
+      })
+    }
   })
 
   return (

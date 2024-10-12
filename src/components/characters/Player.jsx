@@ -34,7 +34,12 @@ const Player = () => {
       gamepad: gamepad,
     }
 
-    playerFlags(group, enemy, anim, forceAnim)
+    const flagStatus = playerFlags(group, enemy, anim, forceAnim)
+    if (flagStatus && flagStatus.length > 0) {
+      flagStatus.forEach(status => {
+        if (status === "health") setHudInfoParameter({playerHealth: group.current.health})
+      })
+    }
 
     hitTimer.current += delta
     playerAttack(group, enemy, anim, inputs, hitTimer)
